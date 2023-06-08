@@ -1,0 +1,89 @@
+@import 'vars';
+@import 'breakpoints';
+
+.forms{
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 4rem;
+
+  @include mediaMin(xl){
+    gap: 3rem;
+  }
+
+  .form{
+    background: #fff;
+    box-shadow: $boxShadow;
+    padding: 2rem;
+
+    @include mediaMax(xl){
+      padding: 1.5rem;
+      font-size: 1.4rem;
+    }
+
+    &_heading{
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+
+      div:nth-of-type(1){
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      @include mediaMax(xl){
+        flex-direction: column;
+        align-items: flex-start;
+
+        .dot{
+          display: none;
+        }
+      }
+
+    }
+
+    &_title, &_type{
+      font-weight: 500;
+    }
+
+    &_type, &_questions{
+      color: $textColor-80;
+    }
+
+    &_body{
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 2.5rem;
+
+      @include mediaMax(xl){
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2rem;
+      }
+    }
+
+    &_stats{
+      display: flex;
+      gap: 3rem;
+      
+      @include mediaMax(xl){
+        flex-wrap: wrap;
+        row-gap: 1rem;
+        column-gap: 2rem;
+      }
+
+      span{
+        color: $textColor-80;
+      }
+    }
+
+    &_ctas{
+      display: flex;
+      gap: 1.5rem;
+    }
+
+  }
+
+}

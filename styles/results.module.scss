@@ -1,0 +1,97 @@
+@import 'vars';
+@import 'breakpoints';
+
+.info{
+  span{
+    font-size: 2rem;
+    font-weight: 600;
+    &:first-child{
+      color: $textColor-80;
+    }
+  }
+}
+
+
+.table {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  margin-top: 4rem;
+  table-layout: fixed;
+  background: #fff;
+  box-shadow: $boxShadow;
+
+
+  tr {
+    padding: .35em;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  th, td {
+    padding: .625em;
+    font-size: 1.6rem;
+
+    flex-basis: 20%;
+    min-width: 17rem;
+    display: flex;
+    align-items: center;
+
+    &:last-child {
+      flex-basis: 40%;
+      justify-content: flex-end;
+    }
+
+  }
+  
+  th {
+    text-align: left;
+
+    &:last-child {
+      visibility: hidden;
+    }
+  }
+
+  td{
+    word-break: break-all;
+    vertical-align: center;
+  }
+
+  .actions{
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  @include mediaMax(md){
+    border: 0;
+
+    thead {
+      display: none;
+    }
+
+    tr {
+      display: block;
+      margin-bottom: .625em;
+    }
+
+    td {
+      display: block;
+      font-size: .8em;
+      text-align: right;
+
+      &:not(:last-child)::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      &:last-child{
+        justify-content: flex-start;
+      }
+
+    }
+
+  }
+
+}

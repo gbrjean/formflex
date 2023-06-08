@@ -1,0 +1,36 @@
+@import 'vars';
+@import 'breakpoints';
+
+
+.collections{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, clamp(26rem, 20vw , 46rem));
+  gap: 3rem;
+  margin-top: 4rem;
+
+  @include mediaMax(xl){
+    grid-template-columns: repeat(auto-fit, 100%);
+  }
+}
+
+.collection{
+  background: #fff;
+  box-shadow: $boxShadow;
+  padding: 2rem;
+
+  &_title{
+    display: block;
+    margin-bottom: 3.5rem;
+    font-weight: 500;
+  }
+
+  &_data{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    span{
+      color: $textColor-80;
+    }
+  }
+}

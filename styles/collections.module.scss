@@ -18,10 +18,46 @@
   box-shadow: $boxShadow;
   padding: 2rem;
 
-  &_title{
-    display: block;
+  &_heading{
     margin-bottom: 3.5rem;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &_title{
     font-weight: 500;
+    display: flex;
+
+    textarea{
+      border: none;
+      resize: none;
+      overflow: hidden;
+      outline: none;
+      background-color: transparent;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: 500;
+      width: 100%;
+      height: auto;
+      line-height: inherit;
+      padding: 0;
+    }
+  }
+
+  &_actions, &_title_actions{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+
+    svg {
+      cursor: pointer;
+      &:hover{
+        *{
+          transition: all .2s;
+          fill: #797979;
+        }
+      }
+    }
   }
 
   &_data{

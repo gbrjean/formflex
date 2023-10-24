@@ -156,7 +156,6 @@ const RightMenu = ({
                 <div className="color-1"></div>
                 <div className="color-2"></div>
                 <div className="color-3"></div>
-                <div className="color-4"></div>
               </div>
 
             </div>
@@ -171,7 +170,6 @@ const RightMenu = ({
                 <div className="color-1"></div>
                 <div className="color-2"></div>
                 <div className="color-3"></div>
-                <div className="color-4"></div>
               </div>
 
             </div>
@@ -186,7 +184,6 @@ const RightMenu = ({
                 <div className="color-1"></div>
                 <div className="color-2"></div>
                 <div className="color-3"></div>
-                <div className="color-4"></div>
               </div>
 
             </div>

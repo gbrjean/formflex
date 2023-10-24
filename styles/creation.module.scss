@@ -560,6 +560,11 @@ $paddingScreens: 2rem;
         height: 3.6rem;
         display: flex;
         align-items: center;
+
+        font-weight: 500;
+        @extend .foreground-bg;
+        @extend .text-color;
+        @extend .foreground-bg-hover;
       }
     }
   

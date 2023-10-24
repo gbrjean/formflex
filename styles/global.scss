@@ -291,24 +291,70 @@ header{
 
 }
 
+// $palettes: (
+//   1: ("1": "#6890FF", "2": "#D9E2FB", "3": "#D9FBF3"),
+//   2: ("1": "#E66D65", "2": "#FBDBD9", "3": "#D9E2FB"),
+//   3: ("1": "#32C297", "2": "#D9FBF3", "3": "#FBEDD9")
+// );
+
+// @for $i from 1 through length($palettes) {
+//   $currentPalette: map-get($palettes, $i);
+
+//   .palette-#{$i} {
+//     @each $color, $code in $currentPalette {
+//       .color-#{$color} {
+//         color: unquote($code);
+//         background-color: unquote($code);
+//       }
+//     }
+//   }
+// }
 $palettes: (
-  1: ("1": "#D9E2FB", "2": "#D9FBF3", "3": "#FBEDD9", "4": "#65E6CF"),
-  2: ("1": "#6586E6", "2": "#65E6CF", "3": "#E6C265", "4": "#E66D65"),
-  3: ("1": "#3A63DF", "2": "#3ADFAD", "3": "#DFA73A", "4": "#3AB7DF")
+  1: (
+    "primary": "#6890FF",
+    "secondary": "#D9E2FB",
+    "accent": "#D9FBF3"
+  ),
+  2: (
+    "primary": "#E66D65",
+    "secondary": "#FBDBD9",
+    "accent": "#D9E2FB"
+  ),
+  3: (
+    "primary": "#32C297",
+    "secondary": "#D9FBF3",
+    "accent": "#FBEDD9"
+  )
 );
 
 @for $i from 1 through length($palettes) {
   $currentPalette: map-get($palettes, $i);
 
   .palette-#{$i} {
-    @each $color, $code in $currentPalette {
-      .color-#{$color} {
-        color: unquote($code);
-        background-color: unquote($code);
+    .foreground-bg {
+      background: unquote(map-get($currentPalette, "secondary"));
+    }
+    .foreground-bg-hover{
+      &:hover{
+        background: rgba($color: unquote(map-get($currentPalette, "secondary")), $alpha: 0.8);
       }
+    }
+    .text-color {
+      color: unquote(map-get($currentPalette, "color"));
+    }
+    .accent-bg {
+      background: unquote(map-get($currentPalette, "accent"));
+    }
+    .border-color {
+      border-bottom: 2px solid unquote(map-get($currentPalette, "secondary"));
+    }
+    .border-color-focused {
+      border-bottom: 2px solid unquote(map-get($currentPalette, "primary"));
     }
   }
 }
+
+
 
 
 .form-canvas{
@@ -347,14 +393,14 @@ $palettes: (
         }
 
         input{
+          @extend .border-color;
           font-size: 1.6rem;
           border: none;
           outline: none;
-          border-bottom: 2px solid $btnBlueColor;
           transition: border-bottom .2s ease;
 
           &:focus{
-            border-bottom: 2px solid $textColor-blue;
+            @extend .border-color-focused;
           }
         }
       }
@@ -391,6 +437,12 @@ $palettes: (
       height: 3.6rem;
       display: flex;
       align-items: center;
+
+
+      font-weight: 500;
+      @extend .foreground-bg;
+      @extend .text-color;
+      @extend .foreground-bg-hover;
     }
   }
 
@@ -426,7 +478,7 @@ $palettes: (
     left: -5px;
     height: calc(100% + 10px);
     width: calc(100% + 10px);
-    background: $btnGreenColor;
+    @extend .accent-bg;
   }
 
   &-label{
@@ -436,9 +488,9 @@ $palettes: (
     display: flex;
     align-items: center;
     justify-content: center;
-    background: $btnBlueColor;
     border-radius: 5px;
     z-index: 1;
+    @extend .foreground-bg;
   }
 
   &-content{

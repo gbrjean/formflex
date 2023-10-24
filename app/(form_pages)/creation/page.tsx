@@ -405,7 +405,12 @@ const FormCreation = () => {
       case 2:
         return <CreatePanel setup={state} setSetup={dispatch} properties={properties} />;
       case 3:
-        return <PreviewPanel mainScreens={state.main_screens} finalScreens={state.final_screens} State_score={state.score_points} />;
+        return <PreviewPanel 
+          mainScreens={state.main_screens} 
+          finalScreens={state.final_screens} 
+          State_score={state.score_points} 
+          State_color_palette={state.color_palette}
+        />;
       default:
         return <TypePanel 
           togglePanel={togglePanel} 

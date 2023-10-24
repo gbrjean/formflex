@@ -8,9 +8,10 @@ type Props = {
   mainScreens: MainScreen[],
   finalScreens: FinalScreen[],
   State_score: boolean;
+  State_color_palette: string;
 }
 
-const PreviewPanel = ({mainScreens, finalScreens, State_score}: Props) => {
+const PreviewPanel = ({mainScreens, finalScreens, State_score, State_color_palette}: Props) => {
 
   const [screens, setScreens] = useState<MainScreen[]>([])
   const [activeScreen, setActiveScreen] = useState(0)
@@ -122,7 +123,7 @@ const PreviewPanel = ({mainScreens, finalScreens, State_score}: Props) => {
     <div className={css.preview_panel}>
       <div className={css.canvas_wrapper}>
         <div className={css.canvas}>
-          <div className={css.canvas_content}>
+          <div className={`${css.canvas_content} ${State_color_palette}`}>
             <>
             
             { final !== null ? (
@@ -152,8 +153,8 @@ const PreviewPanel = ({mainScreens, finalScreens, State_score}: Props) => {
               
 
             <div className={css.canvas_actions}>
-              {activeScreen != 0 && <button className="btn btn-blue" onClick={() => handleScreenChange("prev")}><ArrowLeft /></button>}
-              {!final && <button className="btn btn-blue" onClick={() => handleScreenChange("next")}>Next</button>}
+              {activeScreen != 0 && <button className="btn" onClick={() => handleScreenChange("prev")}><ArrowLeft /></button>}
+              {!final && <button className="btn" onClick={() => handleScreenChange("next")}>Next</button>}
               {error && <p className="error">Please choose an answer</p>}
             </div>
 

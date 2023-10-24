@@ -276,7 +276,7 @@ const CreatePanel = ({setup, setSetup, properties}: CreatePanelProps) => {
         <div className={css.canvas_wrapper}>
           <div className={css.canvas}>
             
-            <div className={css.canvas_content}>
+            <div className={`${css.canvas_content} ${setup.color_palette}`}>
               
               { setup.main_screens.length > 0 && 
                 <>

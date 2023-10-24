@@ -28,7 +28,7 @@ const Form = () => {
     router.push('/404')
   }
 
-  const [data, setData] = useState<{id: string; score_points: boolean} | null>(null)
+  const [data, setData] = useState<{id: string; score_points: boolean; color_palette: string} | null>(null)
 
   const [userData, setUserData] = useState<UserData>({
     email: "",
@@ -337,7 +337,7 @@ const Form = () => {
         
         <div className="form-canvas-wrapper">
           <div className="form-canvas">
-            <div className="form-canvas-content">
+            <div className={`form-canvas-content ${data?.color_palette}`}>
               <>
 
               { showUserdataScreen ? (
@@ -393,8 +393,8 @@ const Form = () => {
                 
 
               <div className="form-canvas-actions">
-                {!final ? (!showUserdataScreen && <button className="btn btn-blue" onClick={() => handleScreenChange("prev")}><ArrowLeft /></button>) : null}
-                {!final && <button className="btn btn-blue" onClick={() => handleScreenChange("next")}>Next</button>}
+                {!final ? (!showUserdataScreen && <button className="btn" onClick={() => handleScreenChange("prev")}><ArrowLeft /></button>) : null}
+                {!final && <button className="btn" onClick={() => handleScreenChange("next")}>Next</button>}
                 {error && <p className="error">Please choose an answer</p>}
               </div>
 

@@ -2,6 +2,7 @@ import { AuthProvider } from "@context/AuthContext"
 import { ProtectedRoutes } from "@utils/ProtectedRoutes"
 
 import "@styles/global.scss"
+import 'react-toastify/dist/ReactToastify.min.css';
 
 export const metadata = {
   title: "Formflex Creation",

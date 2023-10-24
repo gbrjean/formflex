@@ -34,13 +34,25 @@ a{
   max-width: 1900px;
   width: 90%;
   margin: 0 auto;
+
+  &-gray{
+    background: $foreground;
+  }
 }
 
 section{
-  margin-top: 2rem;
+  &:not(.fullscreen){
+    margin-top: 2rem;
+  
+    @include mediaMin(xl){
+      margin-top: 4rem;
+    }
+  }
 
-  @include mediaMin(xl){
-    margin-top: 4rem;
+  &.fullscreen{
+    height: 100vh;
+    display: grid;
+    place-items: center;
   }
 }
 
@@ -52,6 +64,12 @@ h1{
   @include mediaMin(xl){
     margin-bottom: 4rem;
   }
+}
+
+.error{
+  color: rgb(194, 63, 63);
+  font-weight: 600;
+  font-size: 1.2rem;
 }
 
 .btn{
@@ -66,6 +84,7 @@ h1{
   font-size: 1.6rem;
   font-family: $mainFont;
   transition: all .15s;
+  width: fit-content;
 
   &-main{
     background: $mainColor-light;
@@ -95,6 +114,8 @@ h1{
   }
   &-blue{
     background: $btnBlueColor;
+    color: $textColor-blue;
+    font-weight: 500;
     &:hover{
       background: rgba($color: $btnBlueColor, $alpha: 0.8);
     }
@@ -198,6 +219,61 @@ header{
   border-radius: 50%;
 }
 
+.compare-switch{
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  position: relative;
+  display: inline-block;
+  width: 3.5em;
+  height: 1.5em;
+  font-size: 1.2rem;
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    outline: 2px solid rgba(0, 0, 0, 0.35);
+    border-radius: 50px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    &:before {
+      position: absolute;
+      content: "";
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 1.5em;
+      width: 1.5em;
+      inset: 0;
+      background-color: #A6A6A6;
+      border-radius: 50px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+  }
+
+  input:checked + .slider {
+    outline: 2px solid $mainColor;
+    &:before{
+      background-color: $mainColor;
+    }
+  }
+
+  input:focus + .slider {
+    box-shadow: 0 0 1px $mainColor;
+  }
+
+  input:checked + .slider:before {
+    transform: translateX(2em);
+  }
+
+}
+
 .create-prompt{
   &-wrapper{
     position: fixed;
@@ -214,4 +290,161 @@ header{
   }
 
 }
+
+$palettes: (
+  1: ("1": "#D9E2FB", "2": "#D9FBF3", "3": "#FBEDD9", "4": "#65E6CF"),
+  2: ("1": "#6586E6", "2": "#65E6CF", "3": "#E6C265", "4": "#E66D65"),
+  3: ("1": "#3A63DF", "2": "#3ADFAD", "3": "#DFA73A", "4": "#3AB7DF")
+);
+
+@for $i from 1 through length($palettes) {
+  $currentPalette: map-get($palettes, $i);
+
+  .palette-#{$i} {
+    @each $color, $code in $currentPalette {
+      .color-#{$color} {
+        color: unquote($code);
+        background-color: unquote($code);
+      }
+    }
+  }
+}
+
+
+.form-canvas{
+  &-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+    height: 100%;
+  }
+  background: #fff;
+  width: 100%;
+  max-width: 80%;
+  aspect-ratio: 16/9;
+  padding: 3rem 2.5rem;
+  overflow-y: auto;
+  
+  &-content{
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+
+    .input-group{
+      .input + .error {
+        margin-top: 1rem;
+      }
+
+      .input{
+        display: flex;
+        flex-direction: column;
+        gap: .7rem;
+
+        span{
+          font-weight: 500;
+          font-size: 1.5rem;
+        }
+
+        input{
+          font-size: 1.6rem;
+          border: none;
+          outline: none;
+          border-bottom: 2px solid $btnBlueColor;
+          transition: border-bottom .2s ease;
+
+          &:focus{
+            border-bottom: 2px solid $textColor-blue;
+          }
+        }
+      }
+    }
+
+  }
+  
+
+  textarea{
+    width: 100%;
+    font-family: $mainFont;
+    font-size: 1.5rem;
+    color: $textColor;
+    font-weight: 500;
+    border: 0;
+    outline: 0;
+    resize: none;
+    background: none;
+  }
+
+  img{
+    max-width: 80%;
+    max-height: 350px;
+    object-fit: contain;
+  }
+
+  &-actions{
+    margin-top: 2rem;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+
+    button{
+      height: 3.6rem;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+}
+
+
+.answer-box{
+  &-wrapper{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: fit-content;
+  }
+
+  position: relative;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  font-size: 1.5rem;
+  cursor: default;
+  user-select: none;
+  z-index: 999;
+  
+
+  &.--pointer{
+    cursor: pointer;
+  }
+
+  &.--selected::before{
+    position: absolute;
+    content: "";
+    top: -5px;
+    left: -5px;
+    height: calc(100% + 10px);
+    width: calc(100% + 10px);
+    background: $btnGreenColor;
+  }
+
+  &-label{
+    font-weight: 600;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $btnBlueColor;
+    border-radius: 5px;
+    z-index: 1;
+  }
+
+  &-content{
+    font-weight: 500;
+    z-index: 1;
+  }
+}
+
 

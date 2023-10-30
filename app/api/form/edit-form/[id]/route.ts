@@ -1,5 +1,3 @@
-//?: fetchFormByID related
-
 import { db } from "@utils/firebase"
 import { doc, getDoc, collection } from "firebase/firestore"
 import { NextResponse } from "next/server";
@@ -12,18 +10,10 @@ export async function GET(request: Request, { params }: { params: { id: string }
     const formDocSnapshot = await getDoc(formDocRef);
 
     if (formDocSnapshot.exists()) {
-      const formData = formDocSnapshot.data();
+      let formData = formDocSnapshot.data();
       if (formData) {
-        const { main_screens, final_screens, score_points, color_palette } = formData;
-
-        const response = {
-          main_screens,
-          final_screens,
-          score_points,
-          color_palette
-        };
-
-        return NextResponse.json(response)
+        formData = (({ created_at, ...rest }) => rest)(formData)
+        return NextResponse.json(formData)
       }
     } else {
       return new Response('Form not found', { status: 500 });  

@@ -153,8 +153,8 @@ const PreviewPanel = ({mainScreens, finalScreens, State_score, State_color_palet
               
 
             <div className={css.canvas_actions}>
-              {activeScreen != 0 && <button className="btn" onClick={() => handleScreenChange("prev")}><ArrowLeft /></button>}
-              {!final && <button className="btn" onClick={() => handleScreenChange("next")}>Next</button>}
+              {activeScreen != 0 && <button className="btn foreground-bg foreground-bg-hover text-color" onClick={() => handleScreenChange("prev")}><ArrowLeft /></button>}
+              {!final && <button className="btn foreground-bg foreground-bg-hover text-color" onClick={() => handleScreenChange("next")}>Next</button>}
               {error && <p className="error">Please choose an answer</p>}
             </div>
 

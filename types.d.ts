@@ -52,6 +52,7 @@ declare type State = {
 
 
 declare type Action =
+  | { type: "REVALIDATE_STATE"; data: State }
   | { type: "CHANGE_INPUT"; payload: { name: string; value: any } }
   | { type: "ADD_SCREEN"; payload: { name: string; value: {} } }
   | { type: "CHANGE_MAIN_SCREEN_INPUT"; payload: { index: number; field: string; value: any } }

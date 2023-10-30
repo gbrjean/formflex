@@ -1,3 +1,4 @@
+import Link from "next/link"
 import css from "@styles/forms.module.scss"
 
 type DataType = {
@@ -42,8 +43,8 @@ export const Form = ({data, deleteForm} : FormProps) => {
         </div>
         <div className={css.form_ctas}>
           <button className="btn btn-red" onClick={() => deleteForm(data.id)}>Delete</button>
-          <button className="btn btn-blue">Modify</button>
-          <button className="btn btn-green">Results</button>
+          <Link href={`edit/form?id=${data.id}`} className="btn btn-blue">Modify</Link>
+          <Link href={`form/details?id=${data.id}`} className="btn btn-green">Results</Link>
         </div>
       </div>
     </div>

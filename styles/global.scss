@@ -331,25 +331,37 @@ $palettes: (
   $currentPalette: map-get($palettes, $i);
 
   .palette-#{$i} {
+    .color-1 {
+      background-color: unquote(map-get($currentPalette, "primary"));
+    }
+
+    .color-2 {
+      background-color: unquote(map-get($currentPalette, "secondary"));
+    }
+
+    .color-3 {
+      background-color: unquote(map-get($currentPalette, "accent"));
+    }
+
     .foreground-bg {
       background: unquote(map-get($currentPalette, "secondary"));
     }
     .foreground-bg-hover{
       &:hover{
-        background: rgba($color: unquote(map-get($currentPalette, "secondary")), $alpha: 0.8);
+        background: unquote(map-get($currentPalette, "secondary"));
       }
     }
     .text-color {
-      color: unquote(map-get($currentPalette, "color"));
+      color: unquote(map-get($currentPalette, "primary"));
     }
     .accent-bg {
       background: unquote(map-get($currentPalette, "accent"));
     }
     .border-color {
-      border-bottom: 2px solid unquote(map-get($currentPalette, "secondary"));
+      border-bottom: 2px solid unquote(map-get($currentPalette, "secondary")) !important;
     }
-    .border-color-focused {
-      border-bottom: 2px solid unquote(map-get($currentPalette, "primary"));
+    .border-color-focused:focus {
+      border-bottom: 2px solid unquote(map-get($currentPalette, "primary")) !important;
     }
   }
 }
@@ -393,15 +405,10 @@ $palettes: (
         }
 
         input{
-          @extend .border-color;
           font-size: 1.6rem;
           border: none;
           outline: none;
           transition: border-bottom .2s ease;
-
-          &:focus{
-            @extend .border-color-focused;
-          }
         }
       }
     }

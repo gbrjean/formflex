@@ -20,9 +20,10 @@ interface TypePanelProps {
     collections: any[];
     formTypes: any[];
   };
+  isEditable?: boolean;
 }
 
-const TypePanel = ({togglePanel, setup, setSetup, properties} : TypePanelProps) => {
+const TypePanel = ({togglePanel, setup, setSetup, properties, isEditable} : TypePanelProps) => {
 
   const router = useRouter()
 
@@ -57,12 +58,14 @@ const TypePanel = ({togglePanel, setup, setSetup, properties} : TypePanelProps) 
           </div>
           <div className={css.form_input}>
             <label htmlFor="type">Form type</label>
-            <select name="type_id" id="type" defaultValue={setup.type_id} onChange={handleInputChange} >
-              <option value="" disabled>Select a type</option>
-              { properties.formTypes.map(type => (
-                <option value={type.id} data-name={type.name}>{type.name}</option>
-              ))}
-            </select>
+            { properties.formTypes.length > 0 && (
+              <select name="type_id" id="type" defaultValue={setup.type_id} onChange={handleInputChange} >
+                <option value="" disabled>Select a type</option>
+                { properties.formTypes.map(type => (
+                  <option value={type.id} data-name={type.name}>{type.name}</option>
+                ))}
+              </select>
+            )}
           </div>
           <div className={css.form_input}>
             <label htmlFor="collection">Collection</label>
@@ -80,7 +83,7 @@ const TypePanel = ({togglePanel, setup, setSetup, properties} : TypePanelProps) 
         </div>
 
         <div className={css.actions}>
-          <button className="btn btn-main" onClick={() => togglePanel(2)}>Create</button>
+          <button className="btn btn-main" onClick={() => togglePanel(2)}>{isEditable ? 'Continue' : 'Create'}</button>
           <button className="btn btn-gray" onClick={() => router.back()}>Back</button>
         </div>
 

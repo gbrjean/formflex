@@ -6,23 +6,24 @@ type DataType = {
   title: string;
   type: string;
   questions_no: number;
-  completions: number;
-  views: number;
-  mid_completions_exits: number;
-  exits: number;
-  completion_rate: number;
-  exits_rate: number;
-  mid_completion_exits_rate: number;
+  completions?: number;
+  views?: number;
+  mid_completions_exits?: number;
+  exits?: number;
+  completion_rate?: number;
+  exits_rate?: number;
+  mid_completion_exits_rate?: number;
 }
 
 type FormProps = {
   data: DataType;
   deleteForm: (id: string) => void;
+  isDraft?: boolean;
 }
 
-export const Form = ({data, deleteForm} : FormProps) => {
+export const Form = ({data, deleteForm, isDraft} : FormProps) => {
   return (
-    <div className={css.form}>
+    <div className={`${css.form} ${isDraft && css.form_draft}`}>
       <div className={css.form_heading}>
         <span className={css.form_title}>{data.title}</span>
         <span className={`dot ${css.dot}`}></span>
@@ -33,18 +34,20 @@ export const Form = ({data, deleteForm} : FormProps) => {
         </div>
       </div>
       <div className={css.form_body}>
-        <div className={css.form_stats}>
-          <span>{data.completions} completions</span>
-          <span>{data.views} views</span>
-          <span>{data.mid_completions_exits} mid-completion exits</span>
-          <span>{data.completion_rate}% completion rate</span>
-          <span>{data.exits_rate}% exit rate</span>
-          <span>{data.mid_completion_exits_rate}% mid-completion exits rate</span>
-        </div>
+        { !isDraft &&     
+          <div className={css.form_stats}>
+            <span>{data.completions} completions</span>
+            <span>{data.views} views</span>
+            <span>{data.mid_completions_exits} mid-completion exits</span>
+            <span>{data.completion_rate}% completion rate</span>
+            <span>{data.exits_rate}% exit rate</span>
+            <span>{data.mid_completion_exits_rate}% mid-completion exits rate</span>
+          </div>
+        }
         <div className={css.form_ctas}>
           <button className="btn btn-red" onClick={() => deleteForm(data.id)}>Delete</button>
           <Link href={`edit/form?id=${data.id}`} className="btn btn-blue">Modify</Link>
-          <Link href={`form/details?id=${data.id}`} className="btn btn-green">Results</Link>
+          {!isDraft && <Link href={`results?id=${data.id}`} className="btn btn-green">Results</Link>}
         </div>
       </div>
     </div>

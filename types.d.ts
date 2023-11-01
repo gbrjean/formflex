@@ -70,4 +70,20 @@ type ActiveScreen = {
   index: number;
 }
 
+declare type Result = {
+  id: string;
+  answers: {
+    selected_answers: string[];
+  }[];
+  screen_titles: string[];
+  screen_answers: {
+    correct_answers: string[];
+    answers: { content: string }[];
+  }[];
+  completed_at: string;
+  email: string;
+  fullname: string;
+  score?: number;
+}
+
   

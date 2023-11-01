@@ -17,6 +17,13 @@ type FormsType = {
   exits: number;
 }
 
+type DraftsType = {
+  id: string;
+  title: string;
+  type: string;
+  questions_no: number;
+}
+
 type DataType = FormsType & {
   completion_rate: number;
   exits_rate: number;
@@ -28,6 +35,9 @@ const Forms = () => {
   const { user } = useAuth()
 
   const [forms, setForms] = useState<DataType[]>([])
+  const [drafts, setDrafts] = useState<DraftsType[]>([])
+
+  const [isDraftsMode, setIsDraftsMode] = useState(false)
 
   const getForms = async () => {
     try{
@@ -41,6 +51,22 @@ const Forms = () => {
       console.log(data)
       const formsWithRates = data.map((form: FormsType) => calculateRates(form))
       setForms(formsWithRates)
+    } catch(error){
+      console.error(error)
+    }
+  }
+
+  const getDrafts = async () => {
+    try{
+      const response = await fetch('/api/drafts', {
+        method: 'POST',
+        body: JSON.stringify({
+          userId: user?.uid
+        })
+      })
+      let data = await response.json()
+      console.log(data)
+      setDrafts(data)
     } catch(error){
       console.error(error)
     }
@@ -71,21 +97,49 @@ const Forms = () => {
     }
   }
 
+  const deleteDraft = async (id: string) => {
+    const hasConfirmed = confirm("Are you sure you want to delete this draft?")
+    if(hasConfirmed){
+      try{
+        await fetch(`/api/drafts/delete/${id}`)
+        getDrafts()
+      } catch(error){
+        console.error(error)
+      }
+    }
+  }
+
   useEffect(() => {
     getForms()
   }, [])
 
+  useEffect(() => {
+    if(isDraftsMode && drafts.length === 0){
+      getDrafts()
+    }
+  }, [isDraftsMode])
+  
+
   return (
     <section>
       <div className="container">
-        <h1>Forms</h1>
-        <button className="btn btn-main">New form</button>
+        <h1>{isDraftsMode ? 'Drafts' : 'Forms'}</h1>
+        <div className="header-cta-group">
+          <button className="btn btn-main">New form</button>
+          <button className="btn btn-gray" onClick={() => setIsDraftsMode(prev => !prev)}>{`Show only ${isDraftsMode ? 'Forms' : 'Drafts'}`}</button>
+        </div>
 
         <div className={css.forms}>
 
-          {forms.map(data => (
-            <Form key={data.id} data={data} deleteForm={deleteForm} />
-          ))}
+          { !isDraftsMode ? ( 
+            forms.map(data => (
+              <Form key={data.id} data={data} deleteForm={deleteForm} />
+            ))
+          ) : (
+            drafts.map(data => (
+              <Form key={data.id} data={data} deleteForm={deleteDraft} isDraft />
+            ))
+          )}
 
         </div>
 

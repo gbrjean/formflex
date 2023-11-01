@@ -212,6 +212,11 @@ header{
   }
 }
 
+.header-cta-group{
+  display: flex;
+  gap: 1.5rem;
+}
+
 .dot{
   width: 5px;
   height: 5px;
@@ -486,6 +491,33 @@ $palettes: (
     height: calc(100% + 10px);
     width: calc(100% + 10px);
     @extend .accent-bg;
+  }
+  &.result-box::before{
+    position: absolute;
+    content: "";
+    top: -5px;
+    left: -5px;
+    height: calc(100% + 10px);
+    width: calc(100% + 10px);
+    background: rgba($color: $grayColor, $alpha: 0.4);
+  }
+  &.result-box--selected::before{
+    position: absolute;
+    content: "";
+    top: -5px;
+    left: -5px;
+    height: calc(100% + 10px);
+    width: calc(100% + 10px);
+    background: rgba($color: #6586E6, $alpha: 0.4);
+  }
+  &.result-box--correct::before{
+    position: absolute;
+    content: "";
+    top: -5px;
+    left: -5px;
+    height: calc(100% + 10px);
+    width: calc(100% + 10px);
+    background: rgba($color: #65E6CF, $alpha: 0.4);
   }
 
   &-label{

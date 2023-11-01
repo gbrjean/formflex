@@ -21,6 +21,16 @@
       font-size: 1.4rem;
     }
 
+    &:is(.form_draft){
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .form_body{
+        margin-top: 0;
+      }
+    }
+
     &_heading{
       display: flex;
       gap: 1rem;

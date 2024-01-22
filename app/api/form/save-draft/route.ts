@@ -1,17 +1,20 @@
 import { dataURLtoBlob } from "@utils/dataURLtoBlob"
 import { db, storage } from "@utils/firebase"
 import { isBase64Image } from "@utils/isBase64Image"
-import { addDoc, setDoc, doc, getDoc, collection, serverTimestamp } from "firebase/firestore"
+import { addDoc, setDoc, doc, getDoc, collection, serverTimestamp, deleteDoc } from "firebase/firestore"
 import { ref, uploadBytes, deleteObject, getDownloadURL } from "firebase/storage"
 import { v4 } from "uuid"
 
 export async function POST(request: Request) {
-  const { formId, object } = await request.json()
+  const { draftId, object, formId } = await request.json()
 
   object.created_at = serverTimestamp()
 
   const draftsCollectionRef = collection(db, "drafts")
-  const draftRef = formId ? doc(draftsCollectionRef, formId) : null
+  const draftRef = draftId ? doc(draftsCollectionRef, draftId) : null
+
+  const formsCollectionRef = collection(db, "forms")
+  const formRef = formId ? doc(formsCollectionRef, formId) : null
 
   try{
     if(draftRef){
@@ -54,9 +57,17 @@ export async function POST(request: Request) {
         await setDoc(draftRef, object)
       } else {
         await addDoc(draftsCollectionRef, object)
+        //TODO: gasesc formul dupa formId si il sterg
+        if(formRef){
+          await deleteDoc(formRef)
+        }
       }
     } else {
       await addDoc(draftsCollectionRef, object)
+      //TODO: gasesc formul dupa formId si il sterg
+      if(formRef){
+        await deleteDoc(formRef)
+      }
     }
 
     return new Response('success', {status: 200})

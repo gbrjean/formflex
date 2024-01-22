@@ -2,6 +2,7 @@ import css from "@styles/creation.module.scss"
 import ScreenBox from "./ScreenBox"
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
+import { toast } from "react-toastify";
 
 interface LeftMenuProps {
   mainScreens: MainScreen[];
@@ -13,6 +14,7 @@ interface LeftMenuProps {
   setActiveScreen: React.Dispatch<React.SetStateAction<ActiveScreen | null>>;
   screenObjIndex: number;
   screenObjType: "main_screen" | "final_screen";
+  formType: string;
 }
 
 const LeftMenu = ({
@@ -25,6 +27,7 @@ const LeftMenu = ({
   setActiveScreen,
   screenObjIndex,
   screenObjType,
+  formType,
 }: LeftMenuProps) => {
 
   return (
@@ -33,7 +36,7 @@ const LeftMenu = ({
 
         <div className={css.heading}>
           <span>Main screens</span>
-          <button className="btn btn-gray" onClick={triggerAddMainScreen}>+</button>
+          <button className="btn btn-gray" onClick={() => triggerAddMainScreen()}>+</button>
         </div>
         
         <DragDropContext 
@@ -41,22 +44,50 @@ const LeftMenu = ({
             const sourceIndex = params.source.index
             const destIndex = params.destination?.index
             
-            if(destIndex != undefined) {
-              const [movedEl] = mainScreens.splice(sourceIndex, 1);
-              mainScreens.splice(destIndex, 0, movedEl);
+            if(formType == "Survey"){
+              if(destIndex != undefined && 
+                mainScreens[sourceIndex].question_type_name != "Text box" &&
+                mainScreens[destIndex].question_type_name != "Text box"
+              ) {
+                const [movedEl] = mainScreens.splice(sourceIndex, 1);
+                mainScreens.splice(destIndex, 0, movedEl);
+  
+                let newActiveIndex = screenObjIndex;
+                if (sourceIndex === screenObjIndex) {
+                  newActiveIndex = destIndex
+                } else if (destIndex === screenObjIndex) {
+                  newActiveIndex = sourceIndex < destIndex ? destIndex-1 : destIndex+1
+                } else {
+                  newActiveIndex = sourceIndex
+                }
 
-              let newActiveIndex = screenObjIndex;
-              if (sourceIndex === screenObjIndex) {
-                newActiveIndex = destIndex
-              } else if (destIndex === screenObjIndex) {
-                newActiveIndex = sourceIndex < destIndex ? destIndex-1 : destIndex+1
-              } else {
-                newActiveIndex = sourceIndex
-              }
+                if(screenObjType == "main_screen"){
+                  setActiveScreen({ type: "main_screen", index: newActiveIndex >= 0 ? newActiveIndex : 0 });
+                }
+              } else if(
+                  (destIndex != undefined && mainScreens[sourceIndex].question_type_name == "Text box") ||
+                  (destIndex != undefined && mainScreens[destIndex].question_type_name == "Text box")
+              ) {
+                toast.error("Can't move the first main screen if it has the screen type of 'Text box'")
+              } 
+            } else {
+                if(destIndex != undefined) {
+                  const [movedEl] = mainScreens.splice(sourceIndex, 1);
+                  mainScreens.splice(destIndex, 0, movedEl);
+    
+                  let newActiveIndex = screenObjIndex;
+                  if (sourceIndex === screenObjIndex) {
+                    newActiveIndex = destIndex
+                  } else if (destIndex === screenObjIndex) {
+                    newActiveIndex = sourceIndex < destIndex ? destIndex-1 : destIndex+1
+                  } else {
+                    newActiveIndex = sourceIndex
+                  }
 
-              if(screenObjType == "main_screen"){
-                setActiveScreen({ type: "main_screen", index: newActiveIndex >= 0 ? newActiveIndex : 0 });
-              }
+                  if(screenObjType == "main_screen"){
+                    setActiveScreen({ type: "main_screen", index: newActiveIndex >= 0 ? newActiveIndex : 0 });
+                  }
+                }
             }
           }}
         >

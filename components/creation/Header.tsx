@@ -15,8 +15,6 @@ interface HeaderProps {
 
 const Header = ({currentPanel, togglePanel, setup, saveFormToForms, confirmExit} : HeaderProps) => {
 
-  console.log(currentPanel)
-
   return (
     <div className={css.navbar_wrapper}>
       <div className={`container ${css.navbar}`}>

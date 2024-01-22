@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { mainScreenPointsSchema, mainScreenSchema, mainScreenTextboxSchema, finalScreenSchema } from "@validations/form.validation";
 import { useEffect, useState } from "react";
 import AnswerBox from "@components/AnswerBox";
+import { toast } from "react-toastify";
 
 
 interface CreatePanelProps {
@@ -16,6 +17,7 @@ interface CreatePanelProps {
   properties: {
     questionsTypes: any[];
   };
+  cachedState: MainScreen[];
 }
 
 type SelectedSchema = 
@@ -26,30 +28,52 @@ type SelectedSchema =
 
 
 
-const CreatePanel = ({setup, setSetup, properties}: CreatePanelProps) => {
+const CreatePanel = ({setup, setSetup, properties, cachedState}: CreatePanelProps) => {
 
   const [activeScreen, setActiveScreen] = useState<ActiveScreen | null>(null)
-  const isMainScreen = activeScreen === null || activeScreen.type === 'main_screen';
+  const [isMainScreen, setIsMainScreen] = useState(activeScreen === null || activeScreen.type === 'main_screen')
+  // const isMainScreen = activeScreen === null || activeScreen.type === 'main_screen';
 
-  let MainScreenQuestionTypeName = "";
+  const [MainScreenQuestionTypeName, setMainScreenQuestionTypeName] = useState("")
+  // let MainScreenQuestionTypeName = "";
 
-  const [OldCurrentQuestionType, setOldCurrentQuestionType] = useState("")
+  const [isScorePointsEnabled, setIsScorePointsEnabled] = useState(setup.score_points)
+  // const isScorePointsEnabled = setup.score_points;
 
-  const isScorePointsEnabled = setup.score_points;
-
-  const selectedSchema: SelectedSchema = isMainScreen
-                                          ? MainScreenQuestionTypeName !== 'Text box'
-                                            ? isScorePointsEnabled
-                                              ? mainScreenPointsSchema
-                                              : mainScreenSchema
-                                            : mainScreenTextboxSchema
-                                          : finalScreenSchema;
+  const [selectedSchema, setSelectedSchema] = useState<SelectedSchema>(
+    isMainScreen
+    ? MainScreenQuestionTypeName !== 'Text box'
+      ? isScorePointsEnabled
+        ? mainScreenPointsSchema
+        : mainScreenSchema
+      : mainScreenTextboxSchema
+    : finalScreenSchema
+  )
+  // const selectedSchema: SelectedSchema = isMainScreen
+  //                                         ? MainScreenQuestionTypeName !== 'Text box'
+  //                                           ? isScorePointsEnabled
+  //                                             ? mainScreenPointsSchema
+  //                                             : mainScreenSchema
+  //                                           : mainScreenTextboxSchema
+  //                                         : finalScreenSchema;
                   
   
   const INITIAL_MAIN_SCREEN: MainScreen = {
     questions_type: "oJsNUPxDEUf5jf0nc4o8",
     question_type_name: "Multiple answers",
     title: "Set a title",
+    description: "",
+    data: {
+      answers: [],
+      correct_answers: []
+    },
+    allowed_image: false,
+  } 
+
+  const POLL_MAIN_SCREEN: MainScreen = {
+    questions_type: "0jAccZiYZ2Kt0i04dIay",
+    question_type_name: "Bullet answers",
+    title: "Main Screen - Poll",
     description: "",
     data: {
       answers: [],
@@ -129,14 +153,34 @@ const CreatePanel = ({setup, setSetup, properties}: CreatePanelProps) => {
     }
   };
 
-  const triggerAddMainScreen = () => {
-    setSetup({ type: "ADD_SCREEN", payload: { name: "main_screens", value: INITIAL_MAIN_SCREEN } });
-    setActiveScreen({type: 'main_screen', index: setup.main_screens.length})
+  const triggerAddMainScreen = (valueObject?: MainScreen) => {
+    if(setup.type_name == "Poll" && setup.main_screens.length > 0){
+      toast.error("The Poll form type can have only 1 main screen")
+    } else {
+      if(valueObject === undefined){
+        setSetup({ type: "ADD_SCREEN", 
+                  payload: {
+                    name: "main_screens", 
+                    value: INITIAL_MAIN_SCREEN
+                  }});
+      } else {
+        setSetup({ type: "ADD_SCREEN", 
+                   payload: {
+                    name: "main_screens", 
+                    value: valueObject
+                   }});
+      }
+      setActiveScreen({type: 'main_screen', index: setup.main_screens.length})
+    }
   }
 
   const triggerAddFinalScreen = () => {
-    setSetup({ type: "ADD_SCREEN", payload: { name: "final_screens", value: INITIAL_FINAL_SCREEN } });
-    setActiveScreen({type: 'final_screen', index: setup.final_screens.length})
+    if(setup.type_name == "Poll" && setup.final_screens.length > 0){
+      toast.error("The Poll form type can have only 1 final screen")
+    } else{
+      setSetup({ type: "ADD_SCREEN", payload: { name: "final_screens", value: INITIAL_FINAL_SCREEN } });
+      setActiveScreen({type: 'final_screen', index: setup.final_screens.length})
+    }
   }
 
   const triggerChangeMainScreenInput = (key: number, field: string, value: any) => {
@@ -191,6 +235,27 @@ const CreatePanel = ({setup, setSetup, properties}: CreatePanelProps) => {
 
 
   useEffect(() => {
+    const newSelectedSchema = isMainScreen
+                              ? MainScreenQuestionTypeName != 'Text box'
+                                ? isScorePointsEnabled
+                                  ? mainScreenPointsSchema
+                                  : mainScreenSchema
+                                : mainScreenTextboxSchema
+                              : finalScreenSchema;
+  
+    setSelectedSchema(newSelectedSchema);
+  }, [isMainScreen, MainScreenQuestionTypeName, isScorePointsEnabled]);
+
+
+  useEffect(() => {
+    if(setup.type_name == "Poll"){
+      triggerAddMainScreen(POLL_MAIN_SCREEN)
+    }
+  }, [setup.type_name])
+  
+
+
+  useEffect(() => {
     const screenIndex = activeScreen ? activeScreen.index : 0;
     const screenType = activeScreen ? activeScreen.type : "main_screen"
 
@@ -200,11 +265,11 @@ const CreatePanel = ({setup, setSetup, properties}: CreatePanelProps) => {
 
     if(screenType == "main_screen" && setup.main_screens.length > 0){
 
-      MainScreenQuestionTypeName = activeScreen ? setup.main_screens[screenIndex].question_type_name : "";
+      setMainScreenQuestionTypeName(activeScreen ? setup.main_screens[screenIndex].question_type_name : "")
+      const CachedQuestionTypeName = activeScreen ? cachedState[screenIndex]?.question_type_name : ""
 
-      if(MainScreenQuestionTypeName != OldCurrentQuestionType){
+      if(MainScreenQuestionTypeName != CachedQuestionTypeName){
         setSetup({ type: "CHANGE_CORRECT_ANSWERS", payload: { index: screenIndex, value: [] } });
-        setOldCurrentQuestionType(MainScreenQuestionTypeName)
       }
 
       currentTitle = setup.main_screens[screenIndex]?.title ? setup.main_screens[screenIndex].title : ""
@@ -272,6 +337,7 @@ const CreatePanel = ({setup, setSetup, properties}: CreatePanelProps) => {
           screenObjType={activeScreen ? activeScreen.type : "main_screen"}
           mainScreens={setup.main_screens} 
           finalScreens={setup.final_screens} 
+          formType={setup.type_name}
         />
         <div className={css.canvas_wrapper}>
           <div className={css.canvas}>

@@ -4,12 +4,14 @@ import { useFormContext, Controller } from 'react-hook-form';
 import css from "@styles/creation.module.scss"
 import Answer from './Answer';
 import { indexToLabel } from '@utils/indexToLabel';
+import { toast } from 'react-toastify';
 
 
 type Props = {
   setup: {
     color_palette: string;
     score_points: boolean;
+    type_name: string;
   },
   setSetup: React.Dispatch<Action>;
   properties: {
@@ -50,8 +52,15 @@ const RightMenu = ({
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOption = e.target.options[e.target.selectedIndex];
 
-    triggerChangeScreenInput(screenObjIndex, e.target.name, e.target.value)
-    triggerChangeScreenInput(screenObjIndex, "question_type_name", selectedOption.dataset.name)
+    if(setup.type_name == "Survey" && selectedOption.dataset.name == "Text box" && screenObjIndex != 0) {
+      toast.error("Only the first screen can have this type (Text box) for Form type 'Survey'")
+    } else if(setup.type_name == "Poll"){
+      toast.error("The screen type of Form type 'Poll' can't be changed. Choose another Form type")
+      e.target.value = "0jAccZiYZ2Kt0i04dIay"
+    } else {
+      triggerChangeScreenInput(screenObjIndex, e.target.name, e.target.value)
+      triggerChangeScreenInput(screenObjIndex, "question_type_name", selectedOption.dataset.name)
+    }
   }
 
   const handleToggleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,7 +135,7 @@ const RightMenu = ({
 
       <div className={ menu == 1 ? `${css.screen_menu} ${css._active}` : `${css.screen_menu}` }>
 
-        { screenObjType == "main_screen" &&
+        { (screenObjType == "main_screen" && setup.type_name != "Poll") &&
           <div className={css.input_group_text}>
 
             <div className={css.input_group_toggle}>
@@ -201,7 +210,7 @@ const RightMenu = ({
           { screenObjType == "main_screen" &&
             <div className={css.input_group_text}>
               <label htmlFor="questions_type" className={css.menu_title}>Type</label>
-              <select id="questions_type" name="questions_type" defaultValue={screenObj.questions_type} onChange={handleSelectChange}>
+              <select id="questions_type" name="questions_type" value={screenObj.questions_type} onChange={handleSelectChange}>
                 <option value="" disabled>Select a type</option>
                 { properties.questionsTypes.map(type => (
                   <option value={type.id} data-name={type.name}>{type.name}</option>

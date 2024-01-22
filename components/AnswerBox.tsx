@@ -20,7 +20,7 @@ const AnswerBox = ({
 
   const classes = 'answer-box' +
                   (toggleSelectedAnswer ? (selected ? ' --pointer --selected' : ' --pointer') : '') +
-                  (isResultSelected ? ' result-box--selected' : ' result-box') +
+                  (isResultSelected ? ' result-box--selected' : (isResultSelected !== undefined ? ' result-box' : '' ) ) +
                   (isCorrectAnswer ? ' result-box--correct' : '');
 
   return (

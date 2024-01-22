@@ -77,7 +77,7 @@ const Results = () => {
           <span>Results - </span> <span>{title || 'Loading...'}</span>
         </div>
 
-        { results.length === 0 ? (
+        { !results || results.length === 0 ? (
           <span>No form completions so far.</span>
         ) : (
           <ResultsTable results={results} deleteResult={deleteResult} showResult={setResultIndex} />

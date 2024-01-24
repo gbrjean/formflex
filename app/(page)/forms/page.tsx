@@ -5,6 +5,7 @@ import { useAuth } from '@context/AuthContext';
 
 import { Form } from "@components/Form"
 import css from "@styles/forms.module.scss"
+import { redirect } from 'next/navigation';
 
 type FormsType = {
   id: string;
@@ -33,6 +34,8 @@ type DataType = FormsType & {
 const Forms = () => {
 
   const { user } = useAuth()
+
+  if(!user) redirect('/login')
 
   const [forms, setForms] = useState<DataType[]>([])
   const [drafts, setDrafts] = useState<DraftsType[]>([])

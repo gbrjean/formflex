@@ -6,6 +6,7 @@ import { useAuth } from '@context/AuthContext';
 import { Collection } from "@components/Collection"
 import css from "@styles/collections.module.scss"
 import CreatePrompt from '@components/CreatePrompt';
+import { redirect } from 'next/navigation';
 
 type CollectionsType = {
   id: string;
@@ -16,6 +17,8 @@ type CollectionsType = {
 const Collections = () => {
 
   const { user } = useAuth()
+
+  if(!user) redirect('/login')
 
   const [collections, setCollections] = useState<CollectionsType[]>([])
 

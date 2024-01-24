@@ -35,12 +35,12 @@ const Forms = () => {
 
   const { user } = useAuth()
 
-  if(!user) redirect('/login')
-
+  
   const [forms, setForms] = useState<DataType[]>([])
   const [drafts, setDrafts] = useState<DraftsType[]>([])
-
+  
   const [isDraftsMode, setIsDraftsMode] = useState(false)
+  
 
   const getForms = async () => {
     try{

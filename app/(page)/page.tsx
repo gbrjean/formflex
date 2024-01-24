@@ -18,11 +18,11 @@ const Collections = () => {
 
   const { user } = useAuth()
 
-  if(!user) redirect('/login')
-
+  
   const [collections, setCollections] = useState<CollectionsType[]>([])
-
+  
   let [prompt, setPrompt] = useState(false)
+
 
   const getCollections = async () => {
     try{

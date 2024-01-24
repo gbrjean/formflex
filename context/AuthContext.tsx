@@ -1,6 +1,6 @@
 "use client"
 
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { useState, useEffect, useContext, createContext, ReactNode } from "react";
 import { auth, googleProvider, db } from "@utils/firebase";
 import { User, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
@@ -33,6 +33,7 @@ export function AuthProvider({children} : {children: ReactNode}){
   const signInWithGoogle = async () => {
     try{
       await signInWithPopup(auth, googleProvider)
+      router.push("/collections")
     } catch(error){
       console.error(error)
     }
@@ -41,7 +42,7 @@ export function AuthProvider({children} : {children: ReactNode}){
   const logout = async () => {
     try {
       await signOut(auth)
-      router.push('/')
+      redirect('/')
     } catch(error){
       console.error(error)
     }
@@ -51,7 +52,6 @@ export function AuthProvider({children} : {children: ReactNode}){
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setCurrentUser(currentUser)
       setLoading(false)
-      // console.log(currentUser)
     })
     return () => {
       unsubscribe()
